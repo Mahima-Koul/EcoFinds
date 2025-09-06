@@ -2,6 +2,8 @@ from flask import Flask, render_template, request, redirect, url_for, session, f
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime
 from werkzeug.security import generate_password_hash, check_password_hash
+from flask_login import login_required, current_user
+
 
 
 app = Flask(__name__)
@@ -15,6 +17,19 @@ class User(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(200), nullable=False)  
 
+class Product(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(100), nullable=False)
+    description = db.Column(db.Text, nullable=False)
+    category = db.Column(db.String(50), nullable=False)
+    price = db.Column(db.Float, nullable=False)
+    image = db.Column(db.String(200), nullable=True)  
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id')) 
+
+#---home page----
+@app.route("/")
+def home():
+    return render_template('index.html')
 
 #-----register-----#
 @app.route("/register", methods=["GET", "POST"])
@@ -23,15 +38,11 @@ def register():
         username = request.form["username"]
         email = request.form["email"]
         password = request.form["password"]
-
-        # hash password before saving
         hashed_pw = generate_password_hash(password)
         new_user = User(username=username, email=email, password=hashed_pw)
         db.session.add(new_user)
         db.session.commit()
-
-        return redirect(url_for("home"))  # after register, go to home page
-
+        return redirect(url_for("home"))  
     return render_template("register.html")
 
 #-----login-----#
@@ -54,16 +65,6 @@ def login():
     return render_template("login.html")
 
 #-----product adding-----#
-class Product(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    title = db.Column(db.String(100), nullable=False)
-    description = db.Column(db.Text, nullable=False)
-    category = db.Column(db.String(50), nullable=False)
-    price = db.Column(db.Float, nullable=False)
-    image = db.Column(db.String(200), nullable=True)  # placeholder for image URL or filename
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))  # optional: which user posted it
-
-
 @app.route("/add-product", methods=["GET", "POST"])
 def add_product():
     if 'user_id' not in session:
@@ -77,30 +78,38 @@ def add_product():
         image = "placeholder.png"  # for now, just a placeholder
 
         new_product = Product(
-            title=title, description=description, category=category, price=price, image=image, user_id=session['user_id']
+            title=title,
+            description=description,
+            category=category,
+            price=price,
+            image=image, 
+            user_id=session['user_id']
         )
         db.session.add(new_product)
         db.session.commit()
-
-        return redirect(url_for("browse"))
-
+        return redirect(url_for("view_listings"))
     return render_template("add_product.html")
 
+#-----product listing------
+@app.route("/view-listings")
+def view_listings():
+    if "user_id" not in session:  # not logged in
+        flash("Please log in first")
+        return redirect(url_for("login"))
+    products = Product.query.filter_by(user_id=session['user_id']).all()
+    return render_template("view_listings.html", products=products)
 
-@app.route("/browse")
-def browse():
-    category_filter = request.args.get("category")
-    search_query = request.args.get("q")
+#showing accounts page
+@app.route("/account")
+def account():
+    if "user_id" not in session:  # only allow logged in users
+        return redirect(url_for("login"))
 
-    products = Product.query
+    user = User.query.get(session["user_id"])  # fetch current user from DB
+    return render_template("account.html", user=user)
 
-    if category_filter:
-        products = products.filter_by(category=category_filter)
-    if search_query:
-        products = products.filter(Product.title.contains(search_query))
 
-    products = products.all()
-    return render_template("browse.html", products=products)
+
 
 
 @app.route("/show_users")
@@ -111,11 +120,13 @@ def show_users():
         output += f"<p>ID: {u.id} | Username: {u.username} | Email: {u.email} | Password: {u.password}</p>"
     return output
 
+@app.route("/show_products")
+def show():
+    prod= Product.query.all()
+    print(prod)
+    return "hello"
 
 
-@app.route("/")
-def home():
-    return render_template('index.html')
 
 if __name__=="__main__":
     with app.app_context():

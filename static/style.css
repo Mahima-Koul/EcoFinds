@@ -3,34 +3,37 @@
 /* General body styles */
 body {
     font-family: inter;
-    background-color: #C7F9CC;
+    background-color: #ffffff;
     margin: 0;
     padding: 0;
 }
 
 /* Navbar styling */
 .navbar {
-    background-color:#80ED99;
+    background-color: #80ED99;
     color: white;
     padding: 12px;
     text-align: center;
+    z-index: 1000;
 }
 
-.navbar > .container-fluid > .navbar-nav >li >  a {
+.navbar>.container-fluid>.navbar-nav>li>a {
     color: white;
 }
 
-.navbar > .container-fluid > .navbar-nav > li > a:hover {
+.navbar>.container-fluid>.navbar-nav>li>a:hover {
     text-decoration: underline;
 }
 
 /* Reset dropdown items to default Bootstrap colors */
 .dropdown-item {
-    color: black;  /* text color */
+    color: black;
+    /* text color */
 }
 
 .dropdown-item:hover {
-    background-color: #80ED99;  /* hover background */
+    background-color: #80ED99;
+    /* hover background */
     color: white;
 }
 
@@ -46,11 +49,13 @@ button {
 }
 
 button:hover {
-    background-color:#22577A;
+    background-color: #22577A;
 }
 
 /* Forms */
-input[type="text"], input[type="email"], input[type="password"] {
+input[type="text"],
+input[type="email"],
+input[type="password"] {
     width: 90%;
     padding: 10px;
     margin: 10px 0;
@@ -63,8 +68,29 @@ input[type="text"], input[type="email"], input[type="password"] {
 form {
     max-width: 400px;
     background-color: white;
-    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
     border-radius: 10px;
     padding-left: 1rem;
-    
+
+}
+
+.mainbody-mainpage {
+    background-image: url(background.jpg);
+    background-size: cover;
+    /* fills the area */
+    background-position: center;
+    /* keeps it centered */
+    background-repeat: no-repeat;
+    /* no tiling */
+    height: 90vh;
+    /* full screen height */
+    width: 100%;
+    /* full width */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    /* vertically center content */
+    align-items: center;
+    /* horizontally center content */
+    color: white;
 }
