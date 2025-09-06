@@ -90,6 +90,13 @@ def add_product():
         return redirect(url_for("view_listings"))
     return render_template("add_product.html")
 
+#-----browsing------
+@app.route("/browse")
+def browse():
+    products = Product.query.filter_by(user_id=session['user_id']).all()
+    return render_template("browse.html", products=products)
+
+
 #-----product listing------
 @app.route("/view-listings")
 def view_listings():
@@ -108,23 +115,15 @@ def account():
     user = User.query.get(session["user_id"])  # fetch current user from DB
     return render_template("account.html", user=user)
 
+@app.route("/about")
+def about():
+    return render_template('about.html')
 
-
-
-
-@app.route("/show_users")
-def show_users():
-    users = User.query.all()
-    output = "<h2>Registered Users:</h2>"
-    for u in users:
-        output += f"<p>ID: {u.id} | Username: {u.username} | Email: {u.email} | Password: {u.password}</p>"
-    return output
-
-@app.route("/show_products")
-def show():
-    prod= Product.query.all()
-    print(prod)
-    return "hello"
+@app.route("/logout")
+def logout():
+    session.clear()
+    flash("Logged out successfully", "success")
+    return redirect(url_for("home"))
 
 
 
