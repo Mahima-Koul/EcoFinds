@@ -2,7 +2,7 @@
 
 /* General body styles */
 body {
-    font-family: Arial, sans-serif;
+    font-family: inter;
     background-color: #C7F9CC;
     margin: 0;
     padding: 0;
@@ -12,20 +12,28 @@ body {
 .navbar {
     background-color:#80ED99;
     color: white;
-    padding:1px;
+    padding: 12px;
     text-align: center;
 }
 
-/* Links in navbar */
-.navbar a {
+.navbar > .container-fluid > .navbar-nav >li >  a {
     color: white;
-    text-decoration: none;
-    margin: 0 15px;
 }
 
-.navbar a:hover {
+.navbar > .container-fluid > .navbar-nav > li > a:hover {
     text-decoration: underline;
 }
+
+/* Reset dropdown items to default Bootstrap colors */
+.dropdown-item {
+    color: black;  /* text color */
+}
+
+.dropdown-item:hover {
+    background-color: #80ED99;  /* hover background */
+    color: white;
+}
+
 
 /* Buttons */
 button {
@@ -54,9 +62,9 @@ input[type="text"], input[type="email"], input[type="password"] {
 /* Center form */
 form {
     max-width: 400px;
-    margin: 50px auto;
-    padding: 20px;
-    background-color: #38A3A5;
+    background-color: white;
     box-shadow: 0 0 10px rgba(0,0,0,0.1);
     border-radius: 10px;
+    padding-left: 1rem;
+    
 }
