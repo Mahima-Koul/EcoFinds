@@ -1,6 +1,5 @@
-# EcoFinds
-Empowering Sustainable Consumption through a Second-Hand Marketplace
+# EcoFinds: Empowering Sustainable Consumption through a Second-Hand Marketplace
 Team Details:
 Mahima Koul, Kumud K H , M Vishrutha
 college: BMS College of Engineering
-video link:
+video link:https://youtu.be/SeiVDHW4uXo
